@@ -1,0 +1,5 @@
+digraph AST {
+  node [shape=box, fontname="Arial"];
+  rankdir=TB;
+  n0 [label="Tipo\nint"];
+}
