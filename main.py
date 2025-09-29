@@ -39,7 +39,7 @@ def cargar_gramatica_lr(ruta):
 
     # Mapeo de nombre de columna a índice
     token_a_columna = {nombre: idx for idx, nombre in enumerate(columnas_csv)}
-    # Separar terminales y no terminales (buscamos 'programa' como primer no terminal)
+    # Separar terminales y no terminales 
     num_term = 0
     for i, nombre in enumerate(columnas_csv):
         if nombre == 'programa':
@@ -151,7 +151,6 @@ def analizar(texto):
             i += 1
             continue
 
-        # --- Identificador o palabra reservada ---
         if es_letra(c):
             while i < n and (es_letra(texto[i]) or es_digito(texto[i])):
                 i += 1
@@ -163,14 +162,12 @@ def analizar(texto):
             tokens.append(Token(nombre, tipo, lexema, inicio))
             continue
 
-        # --- entero o real ---
         if es_digito(c):
             # consumir la parte entera
             while i < n and es_digito(texto[i]):
                 i += 1
             # si hay un punto y a continuación dígitos, es real
             if i < n and texto[i] == '.':
-                # avanzar sobre el punto
                 i += 1
                 if i >= n or not es_digito(texto[i]):
                     line, col = obtener_line_col(texto, inicio)
@@ -186,7 +183,6 @@ def analizar(texto):
                 tokens.append(Token("Entero", 1, lexema, inicio))
             continue
 
-        # --- Operadores de dos caracteres ---
         if i+1 < n:
             doble = texto[i:i+2]
             if doble in SIMBOLOS:
@@ -195,7 +191,6 @@ def analizar(texto):
                 i += 2
                 continue
 
-        # --- Operadores y símbolos de un carácter ---
         if c in SIMBOLOS:
             nombre, tipo = SIMBOLOS[c]
             tokens.append(Token(nombre, tipo, c, inicio))
@@ -209,7 +204,7 @@ def analizar(texto):
 
     return tokens
 
-# --- Analizador sintáctico  ---
+
 TERMINAL = "TERMINAL"
 NO_TERMINAL = "NO_TERMINAL"
 ESTADO = "ESTADO"
@@ -224,7 +219,12 @@ class Node:
         pad = "  " * level
         if self.state == TERMINAL:
             return f"{pad}{self.state}: {self.name}({self.token.lexema})"
+        
+        # Para no terminales, mostrar el nombre y el número de hijos
         s = f"{pad}{self.state}: {self.name}"
+        if self.children:
+            s += f" [{len(self.children)} hijos]"
+        
         for c in self.children:
             if isinstance(c, Node):
                 s += "\n" + c.__repr__(level+1)
@@ -301,7 +301,6 @@ class Parser:
         token_a_columna = self.gramatica_lr['token_a_columna']
         columnas_csv = self.gramatica_lr['columnas_csv']
         num_term = self.gramatica_lr['num_term']
-        # Diccionario de equivalencias de nombres de token a columna CSV
         equivalencias = {
             'Identificador': 'identificador',
             'Entero': 'entero',
@@ -335,7 +334,6 @@ class Parser:
         tokens = self.tokens + [Token("Fin", 23, "$", -1)]
 
         reducciones_sin_consumir = 0
-        historial_reducciones = {}
 
         while True:
             estado = pila_estados[-1]
@@ -357,86 +355,109 @@ class Parser:
                 reducciones_sin_consumir = 0
             elif accion < 0:
                 # Aceptar: algunas tablas codifican 'accept' como -1, otras como -(n_reglas+1)
-                if accion == -1 or accion == -(len(self.idRegla) + 1):
-                    return pila_simbolos[0] if pila_simbolos else None
+                if accion == -1:
+                    print(f"[LR] ACEPTAR (-1): pila_simbolos tiene {len(pila_simbolos)} elementos")
+                    # Buscar el símbolo inicial 'programa' en la pila
+                    for i, simbolo in enumerate(pila_simbolos):
+                        if simbolo.name == 'programa':
+                            print(f"[LR] Encontrado 'programa' en posición {i}: {simbolo}")
+                            return simbolo
+                    # Si no encontramos 'programa', retornar el último elemento
+                    if pila_simbolos:
+                        print(f"[LR] Retornando último símbolo: {pila_simbolos[-1].name}")
+                        return pila_simbolos[-1]
+                    else:
+                        print("[LR] ADVERTENCIA: pila_simbolos vacía en aceptación")
+                        return None
 
-                # Intentar mapear reducción a índice de regla. Usamos dos offsets comunes
+                # Intentar mapear reducción a índice de regla
                 candidatos = []
                 for offset in (1, 2):
                     idx_cand = -accion - offset
                     if 0 <= idx_cand < len(self.lonRegla):
                         lon_cand = self.lonRegla[idx_cand]
-                        # Simular pop
+                        nt_cand = self.nombreRegla[idx_cand]
+                        
+                        # Simular pop para verificar si el candidato es válido
                         temp_states = pila_estados.copy()
                         for _ in range(lon_cand):
                             if temp_states:
                                 temp_states.pop()
                         if not temp_states:
                             continue
+                            
                         estado_goto_cand = temp_states[-1]
-                        nt_cand = self.nombreRegla[idx_cand]
                         col_goto_cand = self.gramatica_lr['nonterminal_a_columna'].get(nt_cand)
                         if col_goto_cand is None:
                             continue
-                        goto_cand = self.tabla_lr[estado_goto_cand][col_goto_cand]
+                        
                         try:
-                            accion_despues = self.tabla_lr[goto_cand][col]
+                            goto_cand = self.tabla_lr[estado_goto_cand][col_goto_cand]
+                            if goto_cand >= 0:  # Solo considerar GOTOs válidos
+                                accion_despues = self.tabla_lr[goto_cand][col] if goto_cand < len(self.tabla_lr) else None
+                                candidatos.append((idx_cand, lon_cand, estado_goto_cand, goto_cand, accion_despues, offset))
                         except Exception:
-                            accion_despues = None
-                        candidatos.append((idx_cand, lon_cand, estado_goto_cand, goto_cand, accion_despues, offset))
+                            continue
 
-                print(f"[LR][REDUCE] Candidatos simulados: {candidatos}")
+                print(f"[LR][REDUCE] Candidatos válidos: {candidatos}")
 
+                # Seleccionar el mejor candidato basándose en la gramática
                 elegido = None
-                usado = historial_reducciones.get((estado, col), set())
-                # Preferir candidatos que llevan a shift
-                for cand in candidatos:
-                    if cand[0] in usado:
-                        continue
-                    if cand[4] is not None and cand[4] > 0:
-                        elegido = cand
-                        break
-                # Si no hay shifts, preferir alguna reducción no usada
-                if elegido is None:
-                    for cand in candidatos:
-                        if cand[0] in usado:
-                            continue
-                        if cand[4] is not None and cand[4] < 0:
-                            elegido = cand
-                            break
-                # Preferir regla vacía si existe
-                if elegido is None:
-                    for cand in candidatos:
-                        if cand[0] in usado:
-                            continue
-                        if cand[1] == 0:
-                            elegido = cand
-                            break
+                
+                if candidatos:
+                    # Filtrar candidatos con GOTO válido (no 0)
+                    candidatos_validos = [c for c in candidatos if c[3] != 0]
+                    
+                    if candidatos_validos:
+                        # Preferir reglas más largas entre los válidos
+                        elegido = max(candidatos_validos, key=lambda x: (x[1], -x[0]))
+                    else:
+                        # Si no hay válidos, tomar el primero
+                        elegido = candidatos[0]
 
                 if elegido is None:
-                    # fallback determinista: probar offset 2 luego 1
-                    if 0 <= -accion - 2 < len(self.lonRegla):
-                        num_regla = -accion - 2
-                    else:
-                        num_regla = -accion - 1
+                    # Fallback: usar el cálculo directo
+                    num_regla = max(0, min(-accion - 1, len(self.lonRegla) - 1))
                     lon = self.lonRegla[num_regla]
                 else:
                     num_regla, lon, estado_goto_sim, goto_sim, accion_despues, used_offset = elegido
-                historial_reducciones.setdefault((estado, col), set()).add(num_regla)
-                print(f"[LR][REDUCE] Elegido: regla_index={num_regla}, lon={lon}")
+                    
+
+                print(f"[LR][REDUCE] Regla elegida: R{num_regla+1} - {self.nombreRegla[num_regla]} con longitud {lon}")
 
                 hijos = []
                 for _ in range(lon):
                     pila_estados.pop()
                     hijos.insert(0, pila_simbolos.pop())
 
-                # Si la regla elegida es la regla 0 se interpreta como aceptación (convención r0)
+                # Si la regla elegida es la regla 0 se interpreta como aceptación (R1: programa -> Definiciones)
                 if num_regla == 0:
-                    print("[LR] Regla 0 (aceptación) encontrada. Devolviendo raíz del AST.")
-                    return pila_simbolos[0] if pila_simbolos else None
+                    print("[LR] R1: programa -> Definiciones (Regla de aceptación)")
+                    nt = self.nombreRegla[num_regla]
+                    nodo_final = Node(nt, NO_TERMINAL, children=hijos)
+                    print(f"[LR] AST raíz creado: {nodo_final.name} con {len(hijos)} hijos")
+                    return nodo_final
 
                 nt = self.nombreRegla[num_regla]
                 nodo = Node(nt, NO_TERMINAL, children=hijos)
+                print(f"[LR] Nodo creado: {nt} con {len(hijos)} hijos")
+                if hijos:
+                    for i, hijo in enumerate(hijos):
+                        print(f"  hijo[{i}]: {hijo.name} ({hijo.state})")
+                
+                # R8: ListaVar ::= , identificador ListaVar - el orden correcto es Coma, Identificador, ListaVar
+                if num_regla == 7 and len(hijos) == 3:  # R8 
+                    # Reordenar: debe ser Coma, Identificador, ListaVar
+                    nodo = Node(nt, NO_TERMINAL, children=[hijos[1], hijos[0], hijos[2]])  # Coma, Identificador, ListaVar
+                    print(f"[LR] Nodo R8 reordenado: {nt} - Coma, Identificador, ListaVar")
+                
+                # Para producciones recursivas como "Definiciones -> Definicion Definiciones"
+                elif (len(hijos) >= 2 and hijos[1].name == nt and 
+                      nt in ['Definiciones', 'DefLocales', 'Sentencias', 'ListaVar', 'ListaParam']):
+                    # Combinar: tomar hijos del segundo nodo y agregar el primero
+                    nodo = Node(nt, NO_TERMINAL, children=[hijos[0]] + hijos[1].children)
+                    print(f"[LR] Nodo recursivo combinado: {nt} ahora tiene {len(nodo.children)} hijos")
+                
                 estado_goto = pila_estados[-1]
                 nonterminal_a_columna = self.gramatica_lr['nonterminal_a_columna']
                 col_goto = nonterminal_a_columna.get(nt)
@@ -444,6 +465,12 @@ class Parser:
                     raise SyntaxError(f"No terminal '{nt}' no tiene columna GOTO asignada en la tabla LR")
                 goto = self.tabla_lr[estado_goto][col_goto]
                 print(f"[LR] GOTO: Estado: {estado_goto}, NoTerminal: {nt}, Columna: {col_goto}, Goto: {goto}")
+                
+                if goto == 0:
+                    print(f"[LR] ERROR: GOTO devuelve 0 - revisar tabla LR")
+                    print(f"[LR] Estado actual: {estado_goto}, No terminal: {nt}")
+                    return None
+                    
                 pila_estados.append(goto)
                 pila_simbolos.append(nodo)
 
@@ -464,7 +491,7 @@ class Parser:
             self.tabla_lr = gramatica_lr['tabla_lr']
             self.filas = gramatica_lr['filas']
             self.columnas = gramatica_lr['columnas']
-
+    
     def current(self):
         if self.pos < len(self.tokens):
             return self.tokens[self.pos]
@@ -626,12 +653,18 @@ class Parser:
             return e
         raise SyntaxError(f"Expresión primaria mal formada en {t.pos}: {t.nombre}")
 
-# --- Prueba ---
 if __name__ == "__main__":
     ejemplo = """
-    int main(){ int a,b; 
-    a = 3;
-    }"""
+    int x, y;
+    int suma(int a, int b) {
+        return a + b;
+    }
+    int main() {
+        int resultado;
+        resultado = suma(x, y);
+        return resultado;
+    }
+    """
     try:
         toks = analizar(ejemplo)
         print("Tokens:")
@@ -645,7 +678,7 @@ if __name__ == "__main__":
         tree_lr = p.parse_lr()
         print("\nÁrbol sintáctico (LR):")
         print(tree_lr)
-        # Guardar AST en formato DOT y opcionalmente generar PNG (si graphviz dot está instalado)
+        # Guardar AST en formato DOT y opcionalmente generar PNG 
         try:
             save_ast_dot(tree_lr, 'ast.dot')
             generate_png_from_dot('ast.dot', 'ast.png')
