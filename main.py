@@ -89,6 +89,7 @@ SIMBOLOS = {
 # Palabras reservadas (nombre, tipo)
 PALABRAS_RESERVADAS = {
     'int': ('Tipo', 3),
+    'float': ('Tipo', 3),
     'if': ('If', 19),
     'else': ('Else', 21),
     'while': ('While', 20),
@@ -653,16 +654,737 @@ class Parser:
             return e
         raise SyntaxError(f"Expresión primaria mal formada en {t.pos}: {t.nombre}")
 
+
+# ============== ANALIZADOR SEMÁNTICO ==============
+
+class SemanticError(Exception):
+    """Excepción para errores semánticos."""
+    def __init__(self, message, node=None, line=None, column=None):
+        super().__init__(message)
+        self.node = node
+        self.line = line
+        self.column = column
+
+
+class Symbol:
+    """Representa un símbolo en la tabla de símbolos."""
+    def __init__(self, name, symbol_type, data_type=None, scope=None, params=None, return_type=None, initialized=False):
+        self.name = name
+        self.symbol_type = symbol_type  # 'variable', 'function', 'parameter'
+        self.data_type = data_type      # 'int', 'float', 'void'
+        self.scope = scope              # nombre del scope donde está definido
+        self.params = params or []      # para funciones: lista de parámetros [(nombre, tipo), ...]
+        self.return_type = return_type  # para funciones: tipo de retorno
+        self.initialized = initialized  # para variables: si ha sido inicializada
+        self.used = False              # si el símbolo ha sido usado
+        self.defined_at = None         # referencia al nodo donde se definió
+    
+    def __repr__(self):
+        if self.symbol_type == 'function':
+            params_str = ', '.join([f"{p[0]}:{p[1]}" for p in self.params])
+            return f"Function({self.name}({params_str}) -> {self.return_type})"
+        else:
+            init_str = " [init]" if self.initialized else " [uninit]"
+            return f"{self.symbol_type.title()}({self.name}:{self.data_type}{init_str})"
+
+
+class SymbolTable:
+    """Tabla de símbolos con soporte para múltiples scopes."""
+    def __init__(self):
+        self.scopes = [{}]  # Lista de diccionarios, cada uno representa un scope
+        self.scope_names = ['global']  # Nombres de los scopes
+        self.current_function = None   # Función actual para validar returns
+    
+    def enter_scope(self, scope_name):
+        """Entra a un nuevo scope."""
+        self.scopes.append({})
+        self.scope_names.append(scope_name)
+        print(f"[SEMANTIC] Entrando a scope: {scope_name}")
+    
+    def exit_scope(self):
+        """Sale del scope actual."""
+        if len(self.scopes) > 1:
+            exited_scope = self.scopes.pop()
+            scope_name = self.scope_names.pop()
+            print(f"[SEMANTIC] Saliendo de scope: {scope_name}")
+            # Verificar símbolos no usados
+            for symbol in exited_scope.values():
+                if not symbol.used and symbol.symbol_type == 'variable':
+                    print(f"[SEMANTIC] Advertencia: Variable '{symbol.name}' declarada pero no usada en scope '{scope_name}'")
+            return exited_scope
+        return {}
+    
+    def define(self, symbol):
+        """Define un símbolo en el scope actual."""
+        current_scope = self.scopes[-1]
+        if symbol.name in current_scope:
+            raise SemanticError(f"Símbolo '{symbol.name}' ya está definido en el scope actual '{self.scope_names[-1]}'")
+        symbol.scope = self.scope_names[-1]
+        current_scope[symbol.name] = symbol
+        print(f"[SEMANTIC] Definido: {symbol} en scope '{symbol.scope}'")
+    
+    def lookup(self, name, mark_used=True):
+        """Busca un símbolo en todos los scopes (del más interno al más externo)."""
+        for i in range(len(self.scopes) - 1, -1, -1):
+            if name in self.scopes[i]:
+                symbol = self.scopes[i][name]
+                if mark_used:
+                    symbol.used = True
+                return symbol
+        return None
+    
+    def get_current_scope_name(self):
+        return self.scope_names[-1]
+    
+    def is_global_scope(self):
+        return len(self.scopes) == 1
+    
+    def get_all_symbols(self):
+        """Retorna todos los símbolos de todos los scopes."""
+        all_symbols = []
+        for i, scope in enumerate(self.scopes):
+            scope_name = self.scope_names[i]
+            for symbol in scope.values():
+                all_symbols.append((scope_name, symbol))
+        return all_symbols
+
+
+class SemanticAnalyzer:
+    """Analizador semántico que recorre el AST y verifica la semántica."""
+    
+    def __init__(self):
+        self.symbol_table = SymbolTable()
+        self.errors = []
+        self.warnings = []
+        self.current_function_return_type = None
+        self.has_return = False
+    
+    def error(self, message, node=None):
+        """Registra un error semántico."""
+        error = SemanticError(message, node)
+        self.errors.append(error)
+        print(f"[SEMANTIC ERROR] {message}")
+    
+    def warning(self, message, node=None):
+        """Registra una advertencia semántica."""
+        self.warnings.append((message, node))
+        print(f"[SEMANTIC WARNING] {message}")
+    
+    def analyze(self, ast_root):
+        """Punto de entrada principal para el análisis semántico."""
+        print("\n========== ANÁLISIS SEMÁNTICO ==========\n")
+        try:
+            self.visit(ast_root)
+            self.final_checks()
+            return self.errors, self.warnings
+        except Exception as e:
+            self.error(f"Error interno del analizador semántico: {e}")
+            return self.errors, self.warnings
+    
+    def visit(self, node):
+        """Método de dispatch para visitar nodos según su tipo."""
+        if node is None:
+            return None
+            
+        method_name = f"visit_{node.name}"
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
+    
+    def generic_visit(self, node):
+        """Visita genérica que recorre todos los hijos."""
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+    
+    def visit_programa(self, node):
+        """Visita el nodo raíz del programa."""
+        print("[SEMANTIC] Analizando programa principal")
+        
+        # Primera pasada: declarar todas las funciones para permitir llamadas forward
+        self.declare_functions(node)
+        
+        # Segunda pasada: analizar completamente
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+        
+        # Verificar que existe la función main
+        main_func = self.symbol_table.lookup('main', mark_used=False)
+        if not main_func or main_func.symbol_type != 'function':
+            self.error("No se encontró la función 'main' requerida")
+        elif main_func.return_type != 'int':
+            self.error("La función 'main' debe retornar 'int'")
+        elif len(main_func.params) != 0:
+            self.error("La función 'main' no debe tener parámetros")
+    
+    def declare_functions(self, node):
+        """Primera pasada: declara todas las funciones para permitir llamadas forward."""
+        for child in node.children:
+            if isinstance(child, Node) and child.name == 'Definiciones':
+                self.declare_functions_in_definitions(child)
+    
+    def declare_functions_in_definitions(self, node):
+        """Recorre las definiciones y declara las funciones."""
+        for child in node.children:
+            if isinstance(child, Node):
+                if child.name == 'Definicion':
+                    self.declare_functions_in_definition(child)
+                elif child.name == 'Definiciones':
+                    self.declare_functions_in_definitions(child)
+    
+    def declare_functions_in_definition(self, node):
+        """Declara una función si encuentra DefFunc."""
+        for child in node.children:
+            if isinstance(child, Node) and child.name == 'DefFunc':
+                self.declare_function(child)
+    
+    def declare_function(self, node):
+        """Declara una función en la tabla de símbolos."""
+        if len(node.children) < 6:
+            return
+        
+        return_type_node = node.children[0]  # Tipo
+        name_node = node.children[1]         # Identificador
+        params_node = node.children[3]       # Parametros
+        
+        if (return_type_node.state != TERMINAL or name_node.state != TERMINAL):
+            return
+        
+        func_name = name_node.token.lexema
+        return_type = return_type_node.token.lexema
+        
+        # Extraer parámetros
+        params = self.extract_parameters(params_node)
+        
+        # Crear símbolo de función
+        func_symbol = Symbol(
+            name=func_name,
+            symbol_type='function',
+            return_type=return_type,
+            params=params
+        )
+        func_symbol.defined_at = node
+        
+        try:
+            self.symbol_table.define(func_symbol)
+        except SemanticError as e:
+            self.error(str(e), node)
+    
+    def visit_Definiciones(self, node):
+        """Visita las definiciones del programa."""
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+    
+    def visit_Definicion(self, node):
+        """Visita una definición (variable o función)."""
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+    
+    def visit_DefVar(self, node):
+        """Visita una definición de variable."""
+        if len(node.children) < 4:
+            return
+        
+        type_node = node.children[0]      # Tipo
+        name_node = node.children[1]      # Identificador
+        
+        if type_node.state != TERMINAL or name_node.state != TERMINAL:
+            return
+        
+        var_type = type_node.token.lexema
+        var_name = name_node.token.lexema
+        
+        # Verificar tipo válido
+        if var_type not in ['int', 'float']:
+            self.error(f"Tipo de dato '{var_type}' no reconocido", node)
+            return
+        
+        # Crear símbolo de variable
+        var_symbol = Symbol(
+            name=var_name,
+            symbol_type='variable',
+            data_type=var_type,
+            initialized=False  # Las declaraciones no inicializan automáticamente
+        )
+        var_symbol.defined_at = node
+        
+        try:
+            self.symbol_table.define(var_symbol)
+        except SemanticError as e:
+            self.error(str(e), node)
+    
+    def visit_DefFunc(self, node):
+        """Visita una definición de función."""
+        if len(node.children) < 6:
+            return
+        
+        return_type_node = node.children[0]  # Tipo
+        name_node = node.children[1]         # Identificador
+        params_node = node.children[3]       # Parametros
+        body_node = node.children[5]         # BloqFunc
+        
+        if (return_type_node.state != TERMINAL or name_node.state != TERMINAL):
+            return
+        
+        func_name = name_node.token.lexema
+        return_type = return_type_node.token.lexema
+        
+        # La función ya debería estar declarada, solo la marcamos como usada
+        func_symbol = self.symbol_table.lookup(func_name, mark_used=False)
+        if not func_symbol:
+            self.error(f"Función '{func_name}' no declarada correctamente", node)
+            return
+        
+        # Entrar al scope de la función
+        self.symbol_table.enter_scope(f"function_{func_name}")
+        self.symbol_table.current_function = func_symbol
+        self.current_function_return_type = return_type
+        self.has_return = False
+        
+        # Agregar parámetros al scope de la función
+        params = self.extract_parameters(params_node)
+        for param_name, param_type in params:
+            param_symbol = Symbol(
+                name=param_name,
+                symbol_type='parameter',
+                data_type=param_type,
+                initialized=True  # Los parámetros vienen inicializados
+            )
+            try:
+                self.symbol_table.define(param_symbol)
+            except SemanticError as e:
+                self.error(str(e), node)
+        
+        # Analizar el cuerpo de la función
+        self.visit(body_node)
+        
+        # Verificar que funciones no-void tengan return
+        if return_type != 'void' and not self.has_return:
+            self.warning(f"Función '{func_name}' con tipo de retorno '{return_type}' no tiene declaración return", node)
+        
+        # Salir del scope de la función
+        self.symbol_table.exit_scope()
+        self.symbol_table.current_function = None
+        self.current_function_return_type = None
+        self.has_return = False
+    
+    def extract_parameters(self, params_node):
+        """Extrae los parámetros de un nodo Parametros."""
+        params = []
+        if params_node and len(params_node.children) > 0:
+            params.extend(self.extract_param_list(params_node))
+        return params
+    
+    def extract_param_list(self, node):
+        """Extrae parámetros de forma recursiva."""
+        params = []
+        
+        if node.name == 'Parametros' and len(node.children) >= 2:
+            # Parametros -> Tipo Identificador ListaParam
+            type_node = node.children[0]
+            name_node = node.children[1]
+            
+            if type_node.state == TERMINAL and name_node.state == TERMINAL:
+                param_type = type_node.token.lexema
+                param_name = name_node.token.lexema
+                params.append((param_name, param_type))
+            
+            # Procesar ListaParam si existe
+            if len(node.children) > 2:
+                list_param_node = node.children[2]
+                params.extend(self.extract_list_param(list_param_node))
+        
+        return params
+    
+    def extract_list_param(self, node):
+        """Extrae parámetros de ListaParam recursivamente."""
+        params = []
+        
+        if node.name == 'ListaParam' and len(node.children) >= 3:
+            # ListaParam -> Coma Tipo Identificador ListaParam
+            type_node = node.children[1]
+            name_node = node.children[2]
+            
+            if type_node.state == TERMINAL and name_node.state == TERMINAL:
+                param_type = type_node.token.lexema
+                param_name = name_node.token.lexema
+                params.append((param_name, param_type))
+            
+            # Procesar el siguiente ListaParam
+            if len(node.children) > 3:
+                next_list_param = node.children[3]
+                params.extend(self.extract_list_param(next_list_param))
+        
+        return params
+    
+    def visit_BloqFunc(self, node):
+        """Visita el bloque de una función."""
+        # BloqFunc -> { DefLocales }
+        for child in node.children:
+            if isinstance(child, Node) and child.name == 'DefLocales':
+                self.visit(child)
+    
+    def visit_DefLocales(self, node):
+        """Visita las definiciones locales."""
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+    
+    def visit_DefLocal(self, node):
+        """Visita una definición local (variable o sentencia)."""
+        # DefLocal puede contener DefVar (declaración) o Sentencia
+        # Procesar todos los hijos normalmente
+        for child in node.children:
+            if isinstance(child, Node):
+                self.visit(child)
+    
+    def visit_Sentencia(self, node):
+        """Visita una sentencia."""
+        if len(node.children) == 0:
+            return
+        
+        # Primero, visitar todos los hijos DefLocal que podrían contener sentencias anidadas
+        for child in node.children:
+            if isinstance(child, Node) and child.name == 'DefLocal':
+                self.visit(child)
+        
+        # Identificar tipo de sentencia analizando la estructura
+        has_return = False
+        has_assignment = False
+        
+        # Buscar patrones en los hijos directos (no recursivo)
+        for child in node.children:
+            if child.state == TERMINAL:
+                if child.name == 'Return':
+                    has_return = True
+                elif child.name == 'OpAsignacion':
+                    has_assignment = True
+        
+        if has_return:
+            self.visit_return_statement(node)
+        elif has_assignment:
+            # Sentencia de asignación directa
+            self.visit_assignment_statement(node)
+        else:
+            # Visitar otros hijos que no sean DefLocal (ya visitados)
+            for child in node.children:
+                if isinstance(child, Node) and child.name != 'DefLocal':
+                    self.visit(child)
+                if isinstance(child, Node):
+                    self.visit(child)
+    
+    def visit_return_statement(self, node):
+        """Visita una sentencia return."""
+        self.has_return = True
+        
+        if self.current_function_return_type is None:
+            self.error("Sentencia 'return' fuera de una función", node)
+            return
+        
+        # Return Expresion ;
+        if len(node.children) >= 2:
+            expr_node = None
+            for child in node.children:
+                if isinstance(child, Node) and child.name in ['Expresion', 'ValorRegresa']:
+                    expr_node = child
+                    break
+            
+            if expr_node:
+                expr_type = self.visit(expr_node)
+                if expr_type and self.current_function_return_type != 'void':
+                    if not self.are_types_compatible(expr_type, self.current_function_return_type):
+                        self.error(f"Tipo de retorno incompatible: esperado '{self.current_function_return_type}', encontrado '{expr_type}'", node)
+            elif self.current_function_return_type != 'void':
+                self.error(f"Función debe retornar un valor de tipo '{self.current_function_return_type}'", node)
+    
+    def visit_assignment_statement(self, node):
+        """Visita una sentencia de asignación."""
+        # Buscar Identificador, OpAsignacion y Expresion en hijos directos
+        var_name = None
+        expr_node = None
+        
+        for i, child in enumerate(node.children):
+            if child.state == TERMINAL and child.name == 'Identificador' and var_name is None:
+                # Verificar que haya un OpAsignacion después
+                if i + 1 < len(node.children) and node.children[i + 1].state == TERMINAL and node.children[i + 1].name == 'OpAsignacion':
+                    var_name = child.token.lexema
+            elif isinstance(child, Node) and child.name == 'Expresion' and expr_node is None:
+                expr_node = child
+        
+        if not var_name or not expr_node:
+            return
+        
+        # Verificar que la variable esté declarada
+        var_symbol = self.symbol_table.lookup(var_name)
+        if not var_symbol:
+            self.error(f"Variable '{var_name}' no declarada", node)
+            return
+        
+        if var_symbol.symbol_type not in ['variable', 'parameter']:
+            self.error(f"'{var_name}' no es una variable", node)
+            return
+        
+        # Analizar la expresión del lado derecho
+        expr_type = self.visit(expr_node)
+        
+        # Marcar variable como inicializada
+        var_symbol.initialized = True
+        
+        if expr_type and not self.are_types_compatible(var_symbol.data_type, expr_type):
+            self.error(f"Asignación de tipo incompatible: '{var_name}' es '{var_symbol.data_type}' pero se asigna '{expr_type}'", node)
+        # Marcar la variable como inicializada
+        var_symbol.initialized = True
+    
+    def visit_ValorRegresa(self, node):
+        """Visita el valor de retorno."""
+        if len(node.children) > 0:
+            return self.visit(node.children[0])
+        return None
+    
+    def visit_Expresion(self, node):
+        """Visita una expresión y retorna su tipo."""
+        if len(node.children) == 1:
+            # Expresion -> Termino
+            return self.visit(node.children[0])
+        elif len(node.children) == 3:
+            # Expresion -> Expresion OpBinario Expresion
+            left_type = self.visit(node.children[0])
+            operator = node.children[1]
+            right_type = self.visit(node.children[2])
+            
+            return self.check_binary_operation(left_type, operator, right_type, node)
+        
+        return None
+    
+    def visit_Termino(self, node):
+        """Visita un término y retorna su tipo."""
+        if len(node.children) == 1:
+            child = node.children[0]
+            if child.state == TERMINAL:
+                if child.name == 'Entero':
+                    return 'int'
+                elif child.name == 'Real':
+                    return 'float'
+                elif child.name == 'Identificador':
+                    var_name = child.token.lexema
+                    var_symbol = self.symbol_table.lookup(var_name)
+                    if not var_symbol:
+                        self.error(f"Variable '{var_name}' no declarada", node)
+                        return None
+                    
+                    if var_symbol.symbol_type not in ['variable', 'parameter']:
+                        self.error(f"'{var_name}' no es una variable", node)
+                        return None
+                    
+                    if not var_symbol.initialized:
+                        self.warning(f"Variable '{var_name}' usada antes de ser inicializada", node)
+                    
+                    return var_symbol.data_type
+            elif isinstance(child, Node):
+                return self.visit(child)
+        
+        return None
+    
+    def visit_LlamadaFunc(self, node):
+        """Visita una llamada a función y retorna su tipo."""
+        if len(node.children) < 3:
+            return None
+        
+        func_name_node = node.children[0]
+        args_node = node.children[2] if len(node.children) > 2 else None
+        
+        if func_name_node.state != TERMINAL or func_name_node.name != 'Identificador':
+            return None
+        
+        func_name = func_name_node.token.lexema
+        func_symbol = self.symbol_table.lookup(func_name)
+        
+        if not func_symbol:
+            self.error(f"Función '{func_name}' no declarada", node)
+            return None
+        
+        if func_symbol.symbol_type != 'function':
+            self.error(f"'{func_name}' no es una función", node)
+            return None
+        
+        # Extraer argumentos
+        actual_args = self.extract_arguments(args_node) if args_node else []
+        expected_params = func_symbol.params
+        
+        # Verificar número de argumentos
+        if len(actual_args) != len(expected_params):
+            self.error(f"Función '{func_name}' espera {len(expected_params)} argumentos, pero recibió {len(actual_args)}", node)
+            return func_symbol.return_type
+        
+        # Verificar tipos de argumentos
+        for i, (arg_type, (param_name, param_type)) in enumerate(zip(actual_args, expected_params)):
+            if not self.are_types_compatible(param_type, arg_type):
+                self.error(f"Argumento {i+1} de función '{func_name}': esperado '{param_type}', encontrado '{arg_type}'", node)
+        
+        # Marcar función como usada
+        func_symbol.used = True
+        
+        return func_symbol.return_type
+    
+    def extract_arguments(self, args_node):
+        """Extrae los tipos de los argumentos de una llamada a función."""
+        args = []
+        if args_node and args_node.name == 'Argumentos':
+            args.extend(self.extract_arg_list(args_node))
+        return args
+    
+    def extract_arg_list(self, node):
+        """Extrae argumentos de forma recursiva."""
+        args = []
+        
+        if node.name == 'Argumentos' and len(node.children) >= 1:
+            # Argumentos -> Expresion ListaArgumentos
+            expr_node = node.children[0]
+            expr_type = self.visit(expr_node)
+            if expr_type:
+                args.append(expr_type)
+            
+            # Procesar ListaArgumentos si existe
+            if len(node.children) > 1:
+                list_args_node = node.children[1]
+                args.extend(self.extract_list_arguments(list_args_node))
+        
+        return args
+    
+    def extract_list_arguments(self, node):
+        """Extrae argumentos de ListaArgumentos recursivamente."""
+        args = []
+        
+        if node.name == 'ListaArgumentos' and len(node.children) >= 2:
+            # ListaArgumentos -> Coma Expresion ListaArgumentos
+            expr_node = node.children[1]
+            expr_type = self.visit(expr_node)
+            if expr_type:
+                args.append(expr_type)
+            
+            # Procesar el siguiente ListaArgumentos
+            if len(node.children) > 2:
+                next_list_args = node.children[2]
+                args.extend(self.extract_list_arguments(next_list_args))
+        
+        return args
+    
+    def check_binary_operation(self, left_type, operator_node, right_type, node):
+        """Verifica una operación binaria y retorna el tipo resultado."""
+        if not left_type or not right_type:
+            return None
+        
+        if operator_node.state != TERMINAL:
+            return None
+        
+        op = operator_node.token.lexema
+        
+        # Operaciones aritméticas
+        if op in ['+', '-', '*', '/']:
+            if left_type in ['int', 'float'] and right_type in ['int', 'float']:
+                # int + int = int, int + float = float, float + float = float
+                if left_type == 'float' or right_type == 'float':
+                    return 'float'
+                return 'int'
+            else:
+                self.error(f"Operación aritmética '{op}' no válida entre '{left_type}' y '{right_type}'", node)
+                return None
+        
+        # Operaciones de comparación
+        elif op in ['<', '>', '<=', '>=', '==', '!=']:
+            if left_type in ['int', 'float'] and right_type in ['int', 'float']:
+                return 'int'  # Las comparaciones retornan int (0 o 1)
+            else:
+                self.error(f"Comparación '{op}' no válida entre '{left_type}' y '{right_type}'", node)
+                return None
+        
+        # Operaciones lógicas
+        elif op in ['&&', '||']:
+            return 'int'  # Las operaciones lógicas retornan int
+        
+        return None
+    
+    def are_types_compatible(self, expected, actual):
+        """Verifica si dos tipos son compatibles para asignación."""
+        if expected == actual:
+            return True
+        
+        # int puede ser promovido a float
+        if expected == 'float' and actual == 'int':
+            return True
+        
+        return False
+    
+    def final_checks(self):
+        """Verificaciones finales después del análisis."""
+        # Verificar funciones declaradas pero no usadas
+        all_symbols = self.symbol_table.get_all_symbols()
+        for scope_name, symbol in all_symbols:
+            if symbol.symbol_type == 'function' and not symbol.used and symbol.name != 'main':
+                self.warning(f"Función '{symbol.name}' declarada pero no usada")
+    
+    def print_symbol_table(self):
+        """Imprime la tabla de símbolos para debugging."""
+        print("\n========== TABLA DE SÍMBOLOS ==========\n")
+        all_symbols = self.symbol_table.get_all_symbols()
+        current_scope = None
+        
+        for scope_name, symbol in all_symbols:
+            if scope_name != current_scope:
+                print(f"Scope: {scope_name}")
+                current_scope = scope_name
+            
+            used_str = " [USED]" if symbol.used else ""
+            print(f"  {symbol}{used_str}")
+        
+        print("\n" + "="*40)
+    
+    def print_results(self):
+        """Imprime los resultados del análisis semántico."""
+        print("\n========== RESULTADOS ANÁLISIS SEMÁNTICO ==========\n")
+        
+        if not self.errors and not self.warnings:
+            print("✅ Análisis semántico completado sin errores ni advertencias")
+        else:
+            if self.errors:
+                print(f"❌ ERRORES ENCONTRADOS ({len(self.errors)}):")
+                for i, error in enumerate(self.errors, 1):
+                    print(f"  {i}. {error}")
+                print()
+            
+            if self.warnings:
+                print(f"ADVERTENCIAS ({len(self.warnings)}):")
+                for i, (warning, node) in enumerate(self.warnings, 1):
+                    print(f"  {i}. {warning}")
+                print()
+        
+        print(f"ESTADÍSTICAS:")
+        all_symbols = self.symbol_table.get_all_symbols()
+        functions = [s for _, s in all_symbols if s.symbol_type == 'function']
+        variables = [s for _, s in all_symbols if s.symbol_type in ['variable', 'parameter']]
+        
+        print(f"  - Funciones declaradas: {len(functions)}")
+        print(f"  - Variables declaradas: {len(variables)}")
+        print(f"  - Errores semánticos: {len(self.errors)}")
+        print(f"  - Advertencias: {len(self.warnings)}")
+        
+        print("\n" + "="*50)
+
 if __name__ == "__main__":
     ejemplo = """
-    int x, y;
-    int suma(int a, int b) {
-        return a + b;
+    int a;
+    int suma(int a, int b){
+        return a+b;
     }
-    int main() {
-        int resultado;
-        resultado = suma(x, y);
-        return resultado;
+
+    int main(){
+        float a;
+        int b;
+        int c;
+        c = a+b;
+        c = suma(8,9);
     }
     """
     try:
@@ -678,6 +1400,17 @@ if __name__ == "__main__":
         tree_lr = p.parse_lr()
         print("\nÁrbol sintáctico (LR):")
         print(tree_lr)
+        
+        # ===== ANÁLISIS SEMÁNTICO =====
+        semantic_analyzer = SemanticAnalyzer()
+        errors, warnings = semantic_analyzer.analyze(tree_lr)
+        
+        # Mostrar tabla de símbolos
+        semantic_analyzer.print_symbol_table()
+        
+        # Mostrar resultados del análisis semántico
+        semantic_analyzer.print_results()
+        
         # Guardar AST en formato DOT y opcionalmente generar PNG 
         try:
             save_ast_dot(tree_lr, 'ast.dot')
@@ -690,16 +1423,14 @@ if __name__ == "__main__":
     except LexicalError as le:
         print(f"Error léxico en línea {le.line}, columna {le.column}: {le}")
         try:
-            # Mostrar la línea completa y un caret apuntando a la columna
             lines = ejemplo.splitlines()
             if le.line is not None and 1 <= le.line <= len(lines):
                 line_text = lines[le.line - 1]
                 print('> ' + line_text)
-                # columna calculada es 1-based en le.column
                 col = le.column or 1
                 caret = '  ' + (' ' * (col - 1)) + '^'
                 print(caret)
-                # Mostrar código y repr de cada carácter de la línea para depuración
+                #depuración
                 codes = [f"{i+1}:{repr(ch)}(U+{ord(ch):04X})" for i, ch in enumerate(line_text)]
                 print('Códigos en la línea:', ' '.join(codes))
         except Exception:

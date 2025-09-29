@@ -2,8 +2,6 @@
 
 Este repositorio contiene un analizador léxico y sintáctico completo en Python que implementa un parser LR para un subconjunto del lenguaje C. El sistema utiliza una tabla LR externa (`compilador.lr`) junto con su archivo de columnas CSV (`compilador.csv`) para realizar análisis sintáctico robusto y generar árboles sintácticos abstractos (AST) detallados.
 
-![Imagen AST](ast.png)
-
 ## Características principales
 
 ### 🔍 **Analizador Léxico**
@@ -133,5 +131,4 @@ El sistema incluye traces detallados que se pueden usar para:
 - Optimizar el rendimiento del análisis
 
 Para habilitar más debugging, busca las líneas `print(f"[DEBUG]")` en el código.
-
 
