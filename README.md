@@ -1,10 +1,30 @@
-# Analizador Sintáctico LR para Lenguaje C Simplificado
+# Compilador Completo para Lenguaje C Simplificado
 
-Este repositorio contiene un analizador léxico y sintáctico completo en Python que implementa un parser LR para un subconjunto del lenguaje C. El sistema utiliza una tabla LR externa (`compilador.lr`) junto con su archivo de columnas CSV (`compilador.csv`) para realizar análisis sintáctico robusto y generar árboles sintácticos abstractos (AST) detallados.
+Este repositorio contiene un **compilador completo** en Python que implementa análisis léxico, sintáctico y semántico para un subconjunto del lenguaje C. El sistema incluye tanto una **interfaz de línea de comandos** como una **interfaz gráfica moderna** para facilitar su uso.
 
-![Imagen AST](ast.png)
+## 🚀 **Nuevas Características - Interfaz Gráfica**
 
-## Características principales
+### 💻 **GUI Moderna y Amigable**
+- **Editor de código** con números de línea y sintaxis destacada
+- **Compilación en tiempo real** con botón dedicado
+- **Visualización de resultados** organizada en pestañas:
+  - 📋 **Resumen**: Estado general de la compilación
+  - ⚠️ **Errores**: Errores y advertencias detallados
+  - 🌳 **AST**: Visualización del árbol sintáctico
+  - 🖥️ **Salida**: Output completo del compilador
+- **Gestión de archivos**: Abrir, guardar, limpiar
+- **Código de ejemplo** incluido para pruebas rápidas
+
+### 🎨 **Modo de Uso**
+```powershell
+# Interfaz Gráfica (Recomendado)
+python run_gui.py
+
+# Línea de comandos (Tradicional)
+python main.py
+```
+
+## Características del Compilador
 
 ### 🔍 **Analizador Léxico**
 - Reconoce tokens del lenguaje C: tipos de datos, identificadores, operadores, literales
@@ -19,29 +39,50 @@ Este repositorio contiene un analizador léxico y sintáctico completo en Python
 - Manejo inteligente de conflictos reduce-reduce con priorización por validez de GOTO
 - Optimización de nodos recursivos para evitar anidamiento excesivo
 
+### 🧠 **Analizador Semántico**
+- **Verificación de tipos**: Detecta asignaciones incompatibles (float → int)
+- **Tabla de símbolos**: Manejo de scopes y declaraciones
+- **Detección de errores**: Variables no inicializadas, funciones no declaradas
+- **Análisis de uso**: Identifica funciones y variables no utilizadas
+- **Verificación de retorno**: Asegura que funciones retornen valores apropiados
+
 ### 📝 **Estructuras soportadas**
 - **Variables**: Declaraciones simples y listas (`int x, y, z;`)
 - **Funciones**: Definición con parámetros y cuerpo (`int suma(int a, int b) { ... }`)
 - **Expresiones**: Aritméticas, relacionales, lógicas, asignaciones
 - **Sentencias**: if-else, while, return, bloques
 - **Llamadas a función**: Con argumentos múltiples (`suma(x, y)`)
-- **Scope**: Variables locales y globales
+- **Scope**: Variables locales y globales con verificación semántica
 
 ## Requisitos
 - Python 3.8 o superior
+- Pillow (para la interfaz gráfica): `pip install Pillow`
 - (Opcional) Graphviz para visualización de AST (`dot` en PATH)
  
 
 ## Uso
 
-### Ejecución básica
+### 🎯 **Interfaz Gráfica (Recomendado)**
+```powershell
+python run_gui.py
+```
+
+**Características de la GUI:**
+- ✅ Editor con números de línea
+- ✅ Compilación con un click
+- ✅ Resultados organizados en pestañas
+- ✅ Visualización de AST integrada
+- ✅ Gestión de archivos
+- ✅ Código de ejemplo incluido
+
+### 📝 **Línea de Comandos**
 ```powershell
 python main.py
 ```
 
 ### Ejemplos soportados
 
-El analizador puede procesar programas C como:
+El compilador puede procesar programas C como:
 
 ```c
 // Variables globales
@@ -133,5 +174,4 @@ El sistema incluye traces detallados que se pueden usar para:
 - Optimizar el rendimiento del análisis
 
 Para habilitar más debugging, busca las líneas `print(f"[DEBUG]")` en el código.
-
 
