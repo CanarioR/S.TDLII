@@ -1,0 +1,1403 @@
+Return code: 0
+Full output length: 42681
+Contains '✓ COMPILACIÓN EXITOSA': False
+Contains 'X COMPILACIÓN FALLIDA': False
+Full output:
+=== ANLISIS LXICO ===
+Tokens encontrados:
+  tipo('int') lnea 1
+  identificador('suma') lnea 1
+  (('(') lnea 1
+  tipo('int') lnea 1
+  identificador('a') lnea 1
+  ,(',') lnea 1
+  tipo('int') lnea 1
+  identificador('b') lnea 1
+  )(')') lnea 1
+  {('{') lnea 1
+  return('return') lnea 2
+  identificador('a') lnea 2
+  opSuma('+') lnea 2
+  identificador('b') lnea 2
+  ;(';') lnea 2
+  }('}') lnea 3
+  tipo('int') lnea 5
+  identificador('main') lnea 5
+  (('(') lnea 5
+  )(')') lnea 5
+  {('{') lnea 5
+  tipo('int') lnea 6
+  identificador('a') lnea 6
+  ;(';') lnea 6
+  tipo('int') lnea 7
+  identificador('b') lnea 7
+  ;(';') lnea 7
+  tipo('int') lnea 8
+  identificador('c') lnea 8
+  ;(';') lnea 8
+  identificador('a') lnea 9
+  =('=') lnea 9
+  entero('1') lnea 9
+  ;(';') lnea 9
+  identificador('b') lnea 10
+  =('=') lnea 10
+  entero('2') lnea 10
+  ;(';') lnea 10
+  identificador('c') lnea 11
+  =('=') lnea 11
+  identificador('a') lnea 11
+  opSuma('+') lnea 11
+  identificador('b') lnea 11
+  ;(';') lnea 11
+  identificador('c') lnea 12
+  =('=') lnea 12
+  identificador('suma') lnea 12
+  (('(') lnea 12
+  entero('8') lnea 12
+  ,(',') lnea 12
+  entero('9') lnea 12
+  )(')') lnea 12
+  ;(';') lnea 12
+  return('return') lnea 13
+  identificador('c') lnea 13
+  ;(';') lnea 13
+  }('}') lnea 14
+
+=== ANLISIS SINTCTICO ===
+[DEBUG] Mapeo de columnas de terminales:
+  identificador: columna 0
+  entero: columna 1
+  real: columna 2
+  cadena: columna 3
+  tipo: columna 4
+  opSuma: columna 5
+  opMul: columna 6
+  opRelac: columna 7
+  opOr: columna 8
+  opAnd: columna 9
+  opNot: columna 10
+  opIgualdad: columna 11
+  ;: columna 12
+  ,: columna 13
+  (: columna 14
+  ): columna 15
+  {: columna 16
+  }: columna 17
+  =: columna 18
+  if: columna 19
+  while: columna 20
+  return: columna 21
+  else: columna 22
+  $: columna 23
+[DEBUG] Mapeo de columnas de no terminales (GOTO):
+  programa: columna 24
+  Definiciones: columna 25
+  Definicion: columna 26
+  DefVar: columna 27
+  ListaVar: columna 28
+  DefFunc: columna 29
+  Parametros: columna 30
+  ListaParam: columna 31
+  BloqFunc: columna 32
+  DefLocales: columna 33
+  DefLocal: columna 34
+  Sentencias: columna 35
+  Sentencia: columna 36
+  Otro: columna 37
+  Bloque: columna 38
+  ValorRegresa: columna 39
+  Argumentos: columna 40
+  ListaArgumentos: columna 41
+  Termino: columna 42
+  LlamadaFunc: columna 43
+  SentenciaBloque: columna 44
+  Expresion: columna 45
+[DEBUG] Nmero de terminales: 24
+[DEBUG] Nmero de no terminales: 22
+[DEBUG] Total columnas en tabla LR: 46
+
+=== INICIO DEL PARSING LR ===
+
+Paso 1:
+  Token actual: tipo ('int')
+  Estado actual: 0
+  Pila estados: [0]
+  Accin LR[0][4]: 5
+    SHIFT: Estado 5
+
+Paso 2:
+  Token actual: identificador ('suma')
+  Estado actual: 5
+  Pila estados: [0, 5]
+  Accin LR[5][0]: 8
+    SHIFT: Estado 8
+
+Paso 3:
+  Token actual: ( ('(')
+  Estado actual: 8
+  Pila estados: [0, 5, 8]
+  Accin LR[8][14]: 11
+    SHIFT: Estado 11
+
+Paso 4:
+  Token actual: tipo ('int')
+  Estado actual: 11
+  Pila estados: [0, 5, 8, 11]
+  Accin LR[11][4]: 15
+    SHIFT: Estado 15
+
+Paso 5:
+  Token actual: identificador ('a')
+  Estado actual: 15
+  Pila estados: [0, 5, 8, 11, 15]
+  Accin LR[15][0]: 18
+    SHIFT: Estado 18
+
+Paso 6:
+  Token actual: , (',')
+  Estado actual: 18
+  Pila estados: [0, 5, 8, 11, 15, 18]
+  Accin LR[18][13]: 22
+    SHIFT: Estado 22
+
+Paso 7:
+  Token actual: tipo ('int')
+  Estado actual: 22
+  Pila estados: [0, 5, 8, 11, 15, 18, 22]
+  Accin LR[22][4]: 32
+    SHIFT: Estado 32
+
+Paso 8:
+  Token actual: identificador ('b')
+  Estado actual: 32
+  Pila estados: [0, 5, 8, 11, 15, 18, 22, 32]
+  Accin LR[32][0]: 51
+    SHIFT: Estado 51
+
+Paso 9:
+  Token actual: ) (')')
+  Estado actual: 51
+  Pila estados: [0, 5, 8, 11, 15, 18, 22, 32, 51]
+  Accin LR[51][15]: -13
+[LR][REDUCE] Candidatos vlidos: [(12, 4, 15, 0, 0, 1), (11, 0, 51, 67, -14, 2)]
+[LR][REDUCE] Regla elegida: R12 - ListaParam con longitud 0
+    REDUCE: Regla 11 (ListaParam) - Longitud 0
+[LR] Nodo creado: ListaParam con 0 hijos
+[LR] GOTO: Estado: 51, NoTerminal: ListaParam, Columna: 31, Goto: 67
+
+Paso 9:
+  Token actual: ) (')')
+  Estado actual: 67
+  Pila estados: [0, 5, 8, 11, 15, 18, 22, 32, 51, 67]
+  Accin LR[67][15]: -14
+[LR][REDUCE] Candidatos vlidos: [(13, 3, 22, 0, 0, 1), (12, 4, 18, 21, -12, 2)]
+[LR][REDUCE] Regla elegida: R13 - ListaParam con longitud 4
+    REDUCE: Regla 12 (ListaParam) - Longitud 4
+[LR] Nodo creado: ListaParam con 4 hijos
+  hijo[0]: ,
+  hijo[1]: tipo
+  hijo[2]: identificador
+  hijo[3]: ListaParam
+[LR] GOTO: Estado: 18, NoTerminal: ListaParam, Columna: 31, Goto: 21
+
+Paso 9:
+  Token actual: ) (')')
+  Estado actual: 21
+  Pila estados: [0, 5, 8, 11, 15, 18, 21]
+  Accin LR[21][15]: -12
+[LR][REDUCE] Candidatos vlidos: [(11, 0, 21, 0, 0, 1), (10, 3, 11, 14, 17, 2)]
+[LR][REDUCE] Regla elegida: R11 - Parametros con longitud 3
+    REDUCE: Regla 10 (Parametros) - Longitud 3
+[LR] Nodo creado: Parametros con 3 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: ListaParam
+[LR] GOTO: Estado: 11, NoTerminal: Parametros, Columna: 30, Goto: 14
+
+Paso 9:
+  Token actual: ) (')')
+  Estado actual: 14
+  Pila estados: [0, 5, 8, 11, 14]
+  Accin LR[14][15]: 17
+    SHIFT: Estado 17
+
+Paso 10:
+  Token actual: { ('{')
+  Estado actual: 17
+  Pila estados: [0, 5, 8, 11, 14, 17]
+  Accin LR[17][16]: 20
+    SHIFT: Estado 20
+
+Paso 11:
+  Token actual: return ('return')
+  Estado actual: 20
+  Pila estados: [0, 5, 8, 11, 14, 17, 20]
+  Accin LR[20][21]: 30
+    SHIFT: Estado 30
+
+Paso 12:
+  Token actual: identificador ('a')
+  Estado actual: 30
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30]
+  Accin LR[30][0]: 46
+    SHIFT: Estado 46
+
+Paso 13:
+  Token actual: opSuma ('+')
+  Estado actual: 46
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 46]
+  Accin LR[46][5]: -37
+[LR][REDUCE] Candidatos vlidos: [(36, 1, 30, 44, -53, 1), (35, 1, 30, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R36 - Termino con longitud 1
+    REDUCE: Regla 35 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: identificador
+[LR] GOTO: Estado: 30, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 13:
+  Token actual: opSuma ('+')
+  Estado actual: 44
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 44]
+  Accin LR[44][5]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 30, 40, 59, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 30, NoTerminal: Expresion, Columna: 45, Goto: 40
+
+Paso 13:
+  Token actual: opSuma ('+')
+  Estado actual: 40
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40]
+  Accin LR[40][5]: 59
+    SHIFT: Estado 59
+
+Paso 14:
+  Token actual: identificador ('b')
+  Estado actual: 59
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40, 59]
+  Accin LR[59][0]: 46
+    SHIFT: Estado 46
+
+Paso 15:
+  Token actual: ; (';')
+  Estado actual: 46
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40, 59, 46]
+  Accin LR[46][12]: -37
+[LR][REDUCE] Candidatos vlidos: [(36, 1, 59, 44, -53, 1), (35, 1, 59, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R36 - Termino con longitud 1
+    REDUCE: Regla 35 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: identificador
+[LR] GOTO: Estado: 59, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 15:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40, 59, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 59, 75, -48, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 59, NoTerminal: Expresion, Columna: 45, Goto: 75
+
+Paso 15:
+  Token actual: ; (';')
+  Estado actual: 75
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40, 59, 75]
+  Accin LR[75][12]: -48
+[LR][REDUCE] Candidatos vlidos: [(47, 3, 30, 40, -31, 1), (46, 3, 30, 40, -31, 2)]
+[LR][REDUCE] Regla elegida: R47 - Expresion con longitud 3
+    REDUCE: Regla 46 (Expresion) - Longitud 3
+[LR] Nodo creado: Expresion con 3 hijos
+  hijo[0]: Expresion
+  hijo[1]: opSuma
+  hijo[2]: Expresion
+[LR] GOTO: Estado: 30, NoTerminal: Expresion, Columna: 45, Goto: 40
+
+Paso 15:
+  Token actual: ; (';')
+  Estado actual: 40
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 40]
+  Accin LR[40][12]: -31
+[LR][REDUCE] Candidatos vlidos: [(30, 0, 40, 0, 0, 1), (29, 1, 30, 39, 57, 2)]
+[LR][REDUCE] Regla elegida: R30 - ValorRegresa con longitud 1
+    REDUCE: Regla 29 (ValorRegresa) - Longitud 1
+[LR] Nodo creado: ValorRegresa con 1 hijos
+  hijo[0]: Expresion
+[LR] GOTO: Estado: 30, NoTerminal: ValorRegresa, Columna: 39, Goto: 39
+
+Paso 15:
+  Token actual: ; (';')
+  Estado actual: 39
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 39]
+  Accin LR[39][12]: 57
+    SHIFT: Estado 57
+
+Paso 16:
+  Token actual: } ('}')
+  Estado actual: 57
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 30, 39, 57]
+  Accin LR[57][17]: -25
+[LR][REDUCE] Candidatos vlidos: [(24, 2, 30, 0, 0, 1), (23, 3, 20, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R24 - Sentencia con longitud 3
+    REDUCE: Regla 23 (Sentencia) - Longitud 3
+[LR] Nodo creado: Sentencia con 3 hijos
+  hijo[0]: return
+  hijo[1]: ValorRegresa
+  hijo[2]: ;
+[LR] GOTO: Estado: 20, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 16:
+  Token actual: } ('}')
+  Estado actual: 26
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 26]
+  Accin LR[26][17]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 20, 24, -16, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 20, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 16:
+  Token actual: } ('}')
+  Estado actual: 24
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 24]
+  Accin LR[24][17]: -16
+[LR][REDUCE] Candidatos vlidos: [(15, 2, 17, 0, 0, 1), (14, 0, 24, 34, -17, 2)]
+[LR][REDUCE] Regla elegida: R15 - DefLocales con longitud 0
+    REDUCE: Regla 14 (DefLocales) - Longitud 0
+[LR] Nodo creado: DefLocales con 0 hijos
+[LR] GOTO: Estado: 24, NoTerminal: DefLocales, Columna: 33, Goto: 34
+
+Paso 16:
+  Token actual: } ('}')
+  Estado actual: 34
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 24, 34]
+  Accin LR[34][17]: -17
+[LR][REDUCE] Candidatos vlidos: [(16, 1, 24, 24, -16, 1), (15, 2, 20, 23, 33, 2)]
+[LR][REDUCE] Regla elegida: R16 - DefLocales con longitud 2
+    REDUCE: Regla 15 (DefLocales) - Longitud 2
+[LR] Nodo creado: DefLocales con 2 hijos
+  hijo[0]: DefLocal
+  hijo[1]: DefLocales
+[LR] Nodo recursivo combinado: DefLocales ahora tiene 1 hijos
+[LR] GOTO: Estado: 20, NoTerminal: DefLocales, Columna: 33, Goto: 23
+
+Paso 16:
+  Token actual: } ('}')
+  Estado actual: 23
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 23]
+  Accin LR[23][17]: 33
+    SHIFT: Estado 33
+
+Paso 17:
+  Token actual: tipo ('int')
+  Estado actual: 33
+  Pila estados: [0, 5, 8, 11, 14, 17, 20, 23, 33]
+  Accin LR[33][4]: -15
+[LR][REDUCE] Candidatos vlidos: [(14, 0, 33, 0, 5, 1), (13, 3, 17, 19, -10, 2)]
+[LR][REDUCE] Regla elegida: R14 - BloqFunc con longitud 3
+    REDUCE: Regla 13 (BloqFunc) - Longitud 3
+[LR] Nodo creado: BloqFunc con 3 hijos
+  hijo[0]: {
+  hijo[1]: DefLocales
+  hijo[2]: }
+[LR] GOTO: Estado: 17, NoTerminal: BloqFunc, Columna: 32, Goto: 19
+
+Paso 17:
+  Token actual: tipo ('int')
+  Estado actual: 19
+  Pila estados: [0, 5, 8, 11, 14, 17, 19]
+  Accin LR[19][4]: -10
+[LR][REDUCE] Candidatos vlidos: [(9, 0, 19, 0, 5, 1), (8, 6, 0, 6, -6, 2)]
+[LR][REDUCE] Regla elegida: R9 - DefFunc con longitud 6
+    REDUCE: Regla 8 (DefFunc) - Longitud 6
+[LR] Nodo creado: DefFunc con 6 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: (
+  hijo[3]: Parametros
+  hijo[4]: )
+  hijo[5]: BloqFunc
+[LR] GOTO: Estado: 0, NoTerminal: DefFunc, Columna: 29, Goto: 6
+
+Paso 17:
+  Token actual: tipo ('int')
+  Estado actual: 6
+  Pila estados: [0, 6]
+  Accin LR[6][4]: -6
+[LR][REDUCE] Candidatos vlidos: [(4, 1, 0, 3, 5, 2)]
+[LR][REDUCE] Regla elegida: R5 - Definicion con longitud 1
+    REDUCE: Regla 4 (Definicion) - Longitud 1
+[LR] Nodo creado: Definicion con 1 hijos
+  hijo[0]: DefFunc
+[LR] GOTO: Estado: 0, NoTerminal: Definicion, Columna: 26, Goto: 3
+
+Paso 17:
+  Token actual: tipo ('int')
+  Estado actual: 3
+  Pila estados: [0, 3]
+  Accin LR[3][4]: 5
+    SHIFT: Estado 5
+
+Paso 18:
+  Token actual: identificador ('main')
+  Estado actual: 5
+  Pila estados: [0, 3, 5]
+  Accin LR[5][0]: 8
+    SHIFT: Estado 8
+
+Paso 19:
+  Token actual: ( ('(')
+  Estado actual: 8
+  Pila estados: [0, 3, 5, 8]
+  Accin LR[8][14]: 11
+    SHIFT: Estado 11
+
+Paso 20:
+  Token actual: ) (')')
+  Estado actual: 11
+  Pila estados: [0, 3, 5, 8, 11]
+  Accin LR[11][15]: -11
+[LR][REDUCE] Candidatos vlidos: [(10, 3, 3, 0, 0, 1), (9, 0, 11, 14, 17, 2)]
+[LR][REDUCE] Regla elegida: R10 - Parametros con longitud 0
+    REDUCE: Regla 9 (Parametros) - Longitud 0
+[LR] Nodo creado: Parametros con 0 hijos
+[LR] GOTO: Estado: 11, NoTerminal: Parametros, Columna: 30, Goto: 14
+
+Paso 20:
+  Token actual: ) (')')
+  Estado actual: 14
+  Pila estados: [0, 3, 5, 8, 11, 14]
+  Accin LR[14][15]: 17
+    SHIFT: Estado 17
+
+Paso 21:
+  Token actual: { ('{')
+  Estado actual: 17
+  Pila estados: [0, 3, 5, 8, 11, 14, 17]
+  Accin LR[17][16]: 20
+    SHIFT: Estado 20
+
+Paso 22:
+  Token actual: tipo ('int')
+  Estado actual: 20
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20]
+  Accin LR[20][4]: 5
+    SHIFT: Estado 5
+
+Paso 23:
+  Token actual: identificador ('a')
+  Estado actual: 5
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 5]
+  Accin LR[5][0]: 8
+    SHIFT: Estado 8
+
+Paso 24:
+  Token actual: ; (';')
+  Estado actual: 8
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 5, 8]
+  Accin LR[8][12]: -8
+[LR][REDUCE] Candidatos vlidos: [(7, 3, 17, 0, 0, 1), (6, 0, 8, 9, 12, 2)]
+[LR][REDUCE] Regla elegida: R7 - ListaVar con longitud 0
+    REDUCE: Regla 6 (ListaVar) - Longitud 0
+[LR] Nodo creado: ListaVar con 0 hijos
+[LR] GOTO: Estado: 8, NoTerminal: ListaVar, Columna: 28, Goto: 9
+
+Paso 24:
+  Token actual: ; (';')
+  Estado actual: 9
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 5, 8, 9]
+  Accin LR[9][12]: 12
+    SHIFT: Estado 12
+
+Paso 25:
+  Token actual: tipo ('int')
+  Estado actual: 12
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 5, 8, 9, 12]
+  Accin LR[12][4]: -7
+[LR][REDUCE] Candidatos vlidos: [(6, 0, 12, 0, 5, 1), (5, 4, 20, 25, -18, 2)]
+[LR][REDUCE] Regla elegida: R6 - DefVar con longitud 4
+    REDUCE: Regla 5 (DefVar) - Longitud 4
+[LR] Nodo creado: DefVar con 4 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: ListaVar
+  hijo[3]: ;
+[LR] GOTO: Estado: 20, NoTerminal: DefVar, Columna: 27, Goto: 25
+
+Paso 25:
+  Token actual: tipo ('int')
+  Estado actual: 25
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 25]
+  Accin LR[25][4]: -18
+[LR][REDUCE] Candidatos vlidos: [(17, 1, 20, 24, 5, 1), (16, 1, 20, 24, 5, 2)]
+[LR][REDUCE] Regla elegida: R17 - DefLocal con longitud 1
+    REDUCE: Regla 16 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: DefVar
+[LR] GOTO: Estado: 20, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 25:
+  Token actual: tipo ('int')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24]
+  Accin LR[24][4]: 5
+    SHIFT: Estado 5
+
+Paso 26:
+  Token actual: identificador ('b')
+  Estado actual: 5
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 5]
+  Accin LR[5][0]: 8
+    SHIFT: Estado 8
+
+Paso 27:
+  Token actual: ; (';')
+  Estado actual: 8
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 5, 8]
+  Accin LR[8][12]: -8
+[LR][REDUCE] Candidatos vlidos: [(7, 3, 20, 0, 0, 1), (6, 0, 8, 9, 12, 2)]
+[LR][REDUCE] Regla elegida: R7 - ListaVar con longitud 0
+    REDUCE: Regla 6 (ListaVar) - Longitud 0
+[LR] Nodo creado: ListaVar con 0 hijos
+[LR] GOTO: Estado: 8, NoTerminal: ListaVar, Columna: 28, Goto: 9
+
+Paso 27:
+  Token actual: ; (';')
+  Estado actual: 9
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 5, 8, 9]
+  Accin LR[9][12]: 12
+    SHIFT: Estado 12
+
+Paso 28:
+  Token actual: tipo ('int')
+  Estado actual: 12
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 5, 8, 9, 12]
+  Accin LR[12][4]: -7
+[LR][REDUCE] Candidatos vlidos: [(6, 0, 12, 0, 5, 1), (5, 4, 24, 25, -18, 2)]
+[LR][REDUCE] Regla elegida: R6 - DefVar con longitud 4
+    REDUCE: Regla 5 (DefVar) - Longitud 4
+[LR] Nodo creado: DefVar con 4 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: ListaVar
+  hijo[3]: ;
+[LR] GOTO: Estado: 24, NoTerminal: DefVar, Columna: 27, Goto: 25
+
+Paso 28:
+  Token actual: tipo ('int')
+  Estado actual: 25
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 25]
+  Accin LR[25][4]: -18
+[LR][REDUCE] Candidatos vlidos: [(17, 1, 24, 24, 5, 1), (16, 1, 24, 24, 5, 2)]
+[LR][REDUCE] Regla elegida: R17 - DefLocal con longitud 1
+    REDUCE: Regla 16 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: DefVar
+[LR] GOTO: Estado: 24, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 28:
+  Token actual: tipo ('int')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24]
+  Accin LR[24][4]: 5
+    SHIFT: Estado 5
+
+Paso 29:
+  Token actual: identificador ('c')
+  Estado actual: 5
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 5]
+  Accin LR[5][0]: 8
+    SHIFT: Estado 8
+
+Paso 30:
+  Token actual: ; (';')
+  Estado actual: 8
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 5, 8]
+  Accin LR[8][12]: -8
+[LR][REDUCE] Candidatos vlidos: [(7, 3, 24, 0, 0, 1), (6, 0, 8, 9, 12, 2)]
+[LR][REDUCE] Regla elegida: R7 - ListaVar con longitud 0
+    REDUCE: Regla 6 (ListaVar) - Longitud 0
+[LR] Nodo creado: ListaVar con 0 hijos
+[LR] GOTO: Estado: 8, NoTerminal: ListaVar, Columna: 28, Goto: 9
+
+Paso 30:
+  Token actual: ; (';')
+  Estado actual: 9
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 5, 8, 9]
+  Accin LR[9][12]: 12
+    SHIFT: Estado 12
+
+Paso 31:
+  Token actual: identificador ('a')
+  Estado actual: 12
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 5, 8, 9, 12]
+  Accin LR[12][0]: -7
+[LR][REDUCE] Candidatos vlidos: [(6, 0, 12, 0, 0, 1), (5, 4, 24, 25, -18, 2)]
+[LR][REDUCE] Regla elegida: R6 - DefVar con longitud 4
+    REDUCE: Regla 5 (DefVar) - Longitud 4
+[LR] Nodo creado: DefVar con 4 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: ListaVar
+  hijo[3]: ;
+[LR] GOTO: Estado: 24, NoTerminal: DefVar, Columna: 27, Goto: 25
+
+Paso 31:
+  Token actual: identificador ('a')
+  Estado actual: 25
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 25]
+  Accin LR[25][0]: -18
+[LR][REDUCE] Candidatos vlidos: [(17, 1, 24, 24, 27, 1), (16, 1, 24, 24, 27, 2)]
+[LR][REDUCE] Regla elegida: R17 - DefLocal con longitud 1
+    REDUCE: Regla 16 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: DefVar
+[LR] GOTO: Estado: 24, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 31:
+  Token actual: identificador ('a')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24]
+  Accin LR[24][0]: 27
+    SHIFT: Estado 27
+
+Paso 32:
+  Token actual: = ('=')
+  Estado actual: 27
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27]
+  Accin LR[27][18]: 35
+    SHIFT: Estado 35
+
+Paso 33:
+  Token actual: entero ('1')
+  Estado actual: 35
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27, 35]
+  Accin LR[35][1]: 47
+    SHIFT: Estado 47
+
+Paso 34:
+  Token actual: ; (';')
+  Estado actual: 47
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27, 35, 47]
+  Accin LR[47][12]: -38
+[LR][REDUCE] Candidatos vlidos: [(37, 1, 35, 44, -53, 1), (36, 1, 35, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R37 - Termino con longitud 1
+    REDUCE: Regla 36 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: entero
+[LR] GOTO: Estado: 35, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 34:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27, 35, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 35, 52, 68, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 35, NoTerminal: Expresion, Columna: 45, Goto: 52
+
+Paso 34:
+  Token actual: ; (';')
+  Estado actual: 52
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27, 35, 52]
+  Accin LR[52][12]: 68
+    SHIFT: Estado 68
+
+Paso 35:
+  Token actual: identificador ('b')
+  Estado actual: 68
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 24, 27, 35, 52, 68]
+  Accin LR[68][0]: -22
+[LR][REDUCE] Candidatos vlidos: [(21, 6, 24, 26, -19, 1), (20, 4, 24, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R22 - Sentencia con longitud 6
+    REDUCE: Regla 21 (Sentencia) - Longitud 6
+[LR] Nodo creado: Sentencia con 6 hijos
+  hijo[0]: DefLocal
+  hijo[1]: DefLocal
+  hijo[2]: identificador
+  hijo[3]: =
+  hijo[4]: Expresion
+  hijo[5]: ;
+[LR] GOTO: Estado: 24, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 35:
+  Token actual: identificador ('b')
+  Estado actual: 26
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 26]
+  Accin LR[26][0]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 24, 24, 27, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 24, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 35:
+  Token actual: identificador ('b')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24]
+  Accin LR[24][0]: 27
+    SHIFT: Estado 27
+
+Paso 36:
+  Token actual: = ('=')
+  Estado actual: 27
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27]
+  Accin LR[27][18]: 35
+    SHIFT: Estado 35
+
+Paso 37:
+  Token actual: entero ('2')
+  Estado actual: 35
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35]
+  Accin LR[35][1]: 47
+    SHIFT: Estado 47
+
+Paso 38:
+  Token actual: ; (';')
+  Estado actual: 47
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 47]
+  Accin LR[47][12]: -38
+[LR][REDUCE] Candidatos vlidos: [(37, 1, 35, 44, -53, 1), (36, 1, 35, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R37 - Termino con longitud 1
+    REDUCE: Regla 36 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: entero
+[LR] GOTO: Estado: 35, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 38:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 35, 52, 68, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 35, NoTerminal: Expresion, Columna: 45, Goto: 52
+
+Paso 38:
+  Token actual: ; (';')
+  Estado actual: 52
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 52]
+  Accin LR[52][12]: 68
+    SHIFT: Estado 68
+
+Paso 39:
+  Token actual: identificador ('c')
+  Estado actual: 68
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 52, 68]
+  Accin LR[68][0]: -22
+[LR][REDUCE] Candidatos vlidos: [(21, 6, 20, 26, -19, 1), (20, 4, 24, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R22 - Sentencia con longitud 6
+    REDUCE: Regla 21 (Sentencia) - Longitud 6
+[LR] Nodo creado: Sentencia con 6 hijos
+  hijo[0]: DefLocal
+  hijo[1]: DefLocal
+  hijo[2]: identificador
+  hijo[3]: =
+  hijo[4]: Expresion
+  hijo[5]: ;
+[LR] GOTO: Estado: 20, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 39:
+  Token actual: identificador ('c')
+  Estado actual: 26
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 26]
+  Accin LR[26][0]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 20, 24, 27, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 20, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 39:
+  Token actual: identificador ('c')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24]
+  Accin LR[24][0]: 27
+    SHIFT: Estado 27
+
+Paso 40:
+  Token actual: = ('=')
+  Estado actual: 27
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27]
+  Accin LR[27][18]: 35
+    SHIFT: Estado 35
+
+Paso 41:
+  Token actual: identificador ('a')
+  Estado actual: 35
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35]
+  Accin LR[35][0]: 46
+    SHIFT: Estado 46
+
+Paso 42:
+  Token actual: opSuma ('+')
+  Estado actual: 46
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 46]
+  Accin LR[46][5]: -37
+[LR][REDUCE] Candidatos vlidos: [(36, 1, 35, 44, -53, 1), (35, 1, 35, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R36 - Termino con longitud 1
+    REDUCE: Regla 35 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: identificador
+[LR] GOTO: Estado: 35, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 42:
+  Token actual: opSuma ('+')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 44]
+  Accin LR[44][5]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 35, 52, 59, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 35, NoTerminal: Expresion, Columna: 45, Goto: 52
+
+Paso 42:
+  Token actual: opSuma ('+')
+  Estado actual: 52
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52]
+  Accin LR[52][5]: 59
+    SHIFT: Estado 59
+
+Paso 43:
+  Token actual: identificador ('b')
+  Estado actual: 59
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52, 59]
+  Accin LR[59][0]: 46
+    SHIFT: Estado 46
+
+Paso 44:
+  Token actual: ; (';')
+  Estado actual: 46
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52, 59, 46]
+  Accin LR[46][12]: -37
+[LR][REDUCE] Candidatos vlidos: [(36, 1, 59, 44, -53, 1), (35, 1, 59, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R36 - Termino con longitud 1
+    REDUCE: Regla 35 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: identificador
+[LR] GOTO: Estado: 59, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 44:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52, 59, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 59, 75, -48, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 59, NoTerminal: Expresion, Columna: 45, Goto: 75
+
+Paso 44:
+  Token actual: ; (';')
+  Estado actual: 75
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52, 59, 75]
+  Accin LR[75][12]: -48
+[LR][REDUCE] Candidatos vlidos: [(47, 3, 35, 52, 68, 1), (46, 3, 35, 52, 68, 2)]
+[LR][REDUCE] Regla elegida: R47 - Expresion con longitud 3
+    REDUCE: Regla 46 (Expresion) - Longitud 3
+[LR] Nodo creado: Expresion con 3 hijos
+  hijo[0]: Expresion
+  hijo[1]: opSuma
+  hijo[2]: Expresion
+[LR] GOTO: Estado: 35, NoTerminal: Expresion, Columna: 45, Goto: 52
+
+Paso 44:
+  Token actual: ; (';')
+  Estado actual: 52
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52]
+  Accin LR[52][12]: 68
+    SHIFT: Estado 68
+
+Paso 45:
+  Token actual: identificador ('c')
+  Estado actual: 68
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 27, 35, 52, 68]
+  Accin LR[68][0]: -22
+[LR][REDUCE] Candidatos vlidos: [(21, 6, 17, 0, 0, 1), (20, 4, 24, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R21 - Sentencia con longitud 4
+    REDUCE: Regla 20 (Sentencia) - Longitud 4
+[LR] Nodo creado: Sentencia con 4 hijos
+  hijo[0]: identificador
+  hijo[1]: =
+  hijo[2]: Expresion
+  hijo[3]: ;
+[LR] GOTO: Estado: 24, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 45:
+  Token actual: identificador ('c')
+  Estado actual: 26
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 26]
+  Accin LR[26][0]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 24, 24, 27, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 24, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 45:
+  Token actual: identificador ('c')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24]
+  Accin LR[24][0]: 27
+    SHIFT: Estado 27
+
+Paso 46:
+  Token actual: = ('=')
+  Estado actual: 27
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27]
+  Accin LR[27][18]: 35
+    SHIFT: Estado 35
+
+Paso 47:
+  Token actual: identificador ('suma')
+  Estado actual: 35
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35]
+  Accin LR[35][0]: 46
+    SHIFT: Estado 46
+
+Paso 48:
+  Token actual: ( ('(')
+  Estado actual: 46
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46]
+  Accin LR[46][14]: 36
+    SHIFT: Estado 36
+
+Paso 49:
+  Token actual: entero ('8')
+  Estado actual: 36
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36]
+  Accin LR[36][1]: 47
+    SHIFT: Estado 47
+
+Paso 50:
+  Token actual: , (',')
+  Estado actual: 47
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 47]
+  Accin LR[47][13]: -38
+[LR][REDUCE] Candidatos vlidos: [(37, 1, 36, 44, -53, 1), (36, 1, 36, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R37 - Termino con longitud 1
+    REDUCE: Regla 36 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: entero
+[LR] GOTO: Estado: 36, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 50:
+  Token actual: , (',')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 44]
+  Accin LR[44][13]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 36, 54, 71, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 36, NoTerminal: Expresion, Columna: 45, Goto: 54
+
+Paso 50:
+  Token actual: , (',')
+  Estado actual: 54
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54]
+  Accin LR[54][13]: 71
+    SHIFT: Estado 71
+
+Paso 51:
+  Token actual: entero ('9')
+  Estado actual: 71
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 71]
+  Accin LR[71][1]: 47
+    SHIFT: Estado 47
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 47
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 71, 47]
+  Accin LR[47][15]: -38
+[LR][REDUCE] Candidatos vlidos: [(37, 1, 71, 44, -53, 1), (36, 1, 71, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R37 - Termino con longitud 1
+    REDUCE: Regla 36 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: entero
+[LR] GOTO: Estado: 71, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 71, 44]
+  Accin LR[44][15]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 71, 81, -34, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 71, NoTerminal: Expresion, Columna: 45, Goto: 81
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 81
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 71, 81]
+  Accin LR[81][15]: -34
+[LR][REDUCE] Candidatos vlidos: [(33, 3, 36, 0, 0, 1), (32, 0, 81, 87, -35, 2)]
+[LR][REDUCE] Regla elegida: R33 - ListaArgumentos con longitud 0
+    REDUCE: Regla 32 (ListaArgumentos) - Longitud 0
+[LR] Nodo creado: ListaArgumentos con 0 hijos
+[LR] GOTO: Estado: 81, NoTerminal: ListaArgumentos, Columna: 41, Goto: 87
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 87
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 71, 81, 87]
+  Accin LR[87][15]: -35
+[LR][REDUCE] Candidatos vlidos: [(34, 1, 81, 0, 0, 1), (33, 3, 54, 70, -33, 2)]
+[LR][REDUCE] Regla elegida: R34 - ListaArgumentos con longitud 3
+    REDUCE: Regla 33 (ListaArgumentos) - Longitud 3
+[LR] Nodo creado: ListaArgumentos con 3 hijos
+  hijo[0]: ,
+  hijo[1]: Expresion
+  hijo[2]: ListaArgumentos
+[LR] GOTO: Estado: 54, NoTerminal: ListaArgumentos, Columna: 41, Goto: 70
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 70
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 54, 70]
+  Accin LR[70][15]: -33
+[LR][REDUCE] Candidatos vlidos: [(32, 0, 70, 0, 0, 1), (31, 2, 36, 53, 69, 2)]
+[LR][REDUCE] Regla elegida: R32 - Argumentos con longitud 2
+    REDUCE: Regla 31 (Argumentos) - Longitud 2
+[LR] Nodo creado: Argumentos con 2 hijos
+  hijo[0]: Expresion
+  hijo[1]: ListaArgumentos
+[LR] GOTO: Estado: 36, NoTerminal: Argumentos, Columna: 40, Goto: 53
+
+Paso 52:
+  Token actual: ) (')')
+  Estado actual: 53
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 53]
+  Accin LR[53][15]: 69
+    SHIFT: Estado 69
+
+Paso 53:
+  Token actual: ; (';')
+  Estado actual: 69
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 46, 36, 53, 69]
+  Accin LR[69][12]: -41
+[LR][REDUCE] Candidatos vlidos: [(40, 1, 53, 0, 0, 1), (39, 4, 35, 45, -36, 2)]
+[LR][REDUCE] Regla elegida: R40 - LlamadaFunc con longitud 4
+    REDUCE: Regla 39 (LlamadaFunc) - Longitud 4
+[LR] Nodo creado: LlamadaFunc con 4 hijos
+  hijo[0]: identificador
+  hijo[1]: (
+  hijo[2]: Argumentos
+  hijo[3]: )
+[LR] GOTO: Estado: 35, NoTerminal: LlamadaFunc, Columna: 43, Goto: 45
+
+Paso 53:
+  Token actual: ; (';')
+  Estado actual: 45
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 45]
+  Accin LR[45][12]: -36
+[LR][REDUCE] Candidatos vlidos: [(35, 1, 35, 44, -53, 1), (34, 1, 35, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R35 - Termino con longitud 1
+    REDUCE: Regla 34 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: LlamadaFunc
+[LR] GOTO: Estado: 35, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 53:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 35, 52, 68, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 35, NoTerminal: Expresion, Columna: 45, Goto: 52
+
+Paso 53:
+  Token actual: ; (';')
+  Estado actual: 52
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 52]
+  Accin LR[52][12]: 68
+    SHIFT: Estado 68
+
+Paso 54:
+  Token actual: return ('return')
+  Estado actual: 68
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24, 27, 35, 52, 68]
+  Accin LR[68][21]: -22
+[LR][REDUCE] Candidatos vlidos: [(21, 6, 20, 26, -19, 1), (20, 4, 24, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R22 - Sentencia con longitud 6
+    REDUCE: Regla 21 (Sentencia) - Longitud 6
+[LR] Nodo creado: Sentencia con 6 hijos
+  hijo[0]: DefLocal
+  hijo[1]: DefLocal
+  hijo[2]: identificador
+  hijo[3]: =
+  hijo[4]: Expresion
+  hijo[5]: ;
+[LR] GOTO: Estado: 20, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 54:
+  Token actual: return ('return')
+  Estado actual: 26
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 26]
+  Accin LR[26][21]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 20, 24, 30, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 20, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 54:
+  Token actual: return ('return')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24]
+  Accin LR[24][21]: 30
+    SHIFT: Estado 30
+
+Paso 55:
+  Token actual: identificador ('c')
+  Estado actual: 30
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30]
+  Accin LR[30][0]: 46
+    SHIFT: Estado 46
+
+Paso 56:
+  Token actual: ; (';')
+  Estado actual: 46
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30, 46]
+  Accin LR[46][12]: -37
+[LR][REDUCE] Candidatos vlidos: [(36, 1, 30, 44, -53, 1), (35, 1, 30, 44, -53, 2)]
+[LR][REDUCE] Regla elegida: R36 - Termino con longitud 1
+    REDUCE: Regla 35 (Termino) - Longitud 1
+[LR] Nodo creado: Termino con 1 hijos
+  hijo[0]: identificador
+[LR] GOTO: Estado: 30, NoTerminal: Termino, Columna: 42, Goto: 44
+
+Paso 56:
+  Token actual: ; (';')
+  Estado actual: 44
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30, 44]
+  Accin LR[44][12]: -53
+[LR][REDUCE] Candidatos vlidos: [(51, 1, 30, 40, -31, 2)]
+[LR][REDUCE] Regla elegida: R52 - Expresion con longitud 1
+    REDUCE: Regla 51 (Expresion) - Longitud 1
+[LR] Nodo creado: Expresion con 1 hijos
+  hijo[0]: Termino
+[LR] GOTO: Estado: 30, NoTerminal: Expresion, Columna: 45, Goto: 40
+
+Paso 56:
+  Token actual: ; (';')
+  Estado actual: 40
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30, 40]
+  Accin LR[40][12]: -31
+[LR][REDUCE] Candidatos vlidos: [(30, 0, 40, 0, 0, 1), (29, 1, 30, 39, 57, 2)]
+[LR][REDUCE] Regla elegida: R30 - ValorRegresa con longitud 1
+    REDUCE: Regla 29 (ValorRegresa) - Longitud 1
+[LR] Nodo creado: ValorRegresa con 1 hijos
+  hijo[0]: Expresion
+[LR] GOTO: Estado: 30, NoTerminal: ValorRegresa, Columna: 39, Goto: 39
+
+Paso 56:
+  Token actual: ; (';')
+  Estado actual: 39
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30, 39]
+  Accin LR[39][12]: 57
+    SHIFT: Estado 57
+
+Paso 57:
+  Token actual: } ('}')
+  Estado actual: 57
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 30, 39, 57]
+  Accin LR[57][17]: -25
+[LR][REDUCE] Candidatos vlidos: [(24, 2, 30, 0, 0, 1), (23, 3, 24, 26, -19, 2)]
+[LR][REDUCE] Regla elegida: R24 - Sentencia con longitud 3
+    REDUCE: Regla 23 (Sentencia) - Longitud 3
+[LR] Nodo creado: Sentencia con 3 hijos
+  hijo[0]: return
+  hijo[1]: ValorRegresa
+  hijo[2]: ;
+[LR] GOTO: Estado: 24, NoTerminal: Sentencia, Columna: 36, Goto: 26
+
+Paso 57:
+  Token actual: } ('}')
+  Estado actual: 26
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 26]
+  Accin LR[26][17]: -19
+[LR][REDUCE] Candidatos vlidos: [(18, 0, 26, 0, 0, 1), (17, 1, 24, 24, -16, 2)]
+[LR][REDUCE] Regla elegida: R18 - DefLocal con longitud 1
+    REDUCE: Regla 17 (DefLocal) - Longitud 1
+[LR] Nodo creado: DefLocal con 1 hijos
+  hijo[0]: Sentencia
+[LR] GOTO: Estado: 24, NoTerminal: DefLocal, Columna: 34, Goto: 24
+
+Paso 57:
+  Token actual: } ('}')
+  Estado actual: 24
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 24, 24]
+  Accin LR[24][17]: -16
+[LR][REDUCE] Candidatos vlidos: [(15, 2, 20, 23, 33, 1), (14, 0, 24, 34, -17, 2)]
+[LR][REDUCE] Regla elegida: R16 - DefLocales con longitud 2
+    REDUCE: Regla 15 (DefLocales) - Longitud 2
+[LR] Nodo creado: DefLocales con 2 hijos
+  hijo[0]: DefLocal
+  hijo[1]: DefLocal
+[LR] GOTO: Estado: 20, NoTerminal: DefLocales, Columna: 33, Goto: 23
+
+Paso 57:
+  Token actual: } ('}')
+  Estado actual: 23
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 23]
+  Accin LR[23][17]: 33
+    SHIFT: Estado 33
+
+Paso 58:
+  Token actual: $ ('$')
+  Estado actual: 33
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 20, 23, 33]
+  Accin LR[33][23]: -15
+[LR][REDUCE] Candidatos vlidos: [(14, 0, 33, 0, -3, 1), (13, 3, 17, 19, -10, 2)]
+[LR][REDUCE] Regla elegida: R14 - BloqFunc con longitud 3
+    REDUCE: Regla 13 (BloqFunc) - Longitud 3
+[LR] Nodo creado: BloqFunc con 3 hijos
+  hijo[0]: {
+  hijo[1]: DefLocales
+  hijo[2]: }
+[LR] GOTO: Estado: 17, NoTerminal: BloqFunc, Columna: 32, Goto: 19
+
+Paso 58:
+  Token actual: $ ('$')
+  Estado actual: 19
+  Pila estados: [0, 3, 5, 8, 11, 14, 17, 19]
+  Accin LR[19][23]: -10
+[LR][REDUCE] Candidatos vlidos: [(9, 0, 19, 0, -3, 1), (8, 6, 3, 6, -6, 2)]
+[LR][REDUCE] Regla elegida: R9 - DefFunc con longitud 6
+    REDUCE: Regla 8 (DefFunc) - Longitud 6
+[LR] Nodo creado: DefFunc con 6 hijos
+  hijo[0]: tipo
+  hijo[1]: identificador
+  hijo[2]: (
+  hijo[3]: Parametros
+  hijo[4]: )
+  hijo[5]: BloqFunc
+[LR] GOTO: Estado: 3, NoTerminal: DefFunc, Columna: 29, Goto: 6
+
+Paso 58:
+  Token actual: $ ('$')
+  Estado actual: 6
+  Pila estados: [0, 3, 6]
+  Accin LR[6][23]: -6
+[LR][REDUCE] Candidatos vlidos: [(4, 1, 3, 3, -3, 2)]
+[LR][REDUCE] Regla elegida: R5 - Definicion con longitud 1
+    REDUCE: Regla 4 (Definicion) - Longitud 1
+[LR] Nodo creado: Definicion con 1 hijos
+  hijo[0]: DefFunc
+[LR] GOTO: Estado: 3, NoTerminal: Definicion, Columna: 26, Goto: 3
+
+Paso 58:
+  Token actual: $ ('$')
+  Estado actual: 3
+  Pila estados: [0, 3, 3]
+  Accin LR[3][23]: -3
+[LR][REDUCE] Candidatos vlidos: [(2, 2, 0, 2, -2, 1), (1, 0, 3, 7, -4, 2)]
+[LR][REDUCE] Regla elegida: R3 - Definiciones con longitud 2
+    REDUCE: Regla 2 (Definiciones) - Longitud 2
+[LR] Nodo creado: Definiciones con 2 hijos
+  hijo[0]: Definicion
+  hijo[1]: Definicion
+[LR] GOTO: Estado: 0, NoTerminal: Definiciones, Columna: 25, Goto: 2
+
+Paso 58:
+  Token actual: $ ('$')
+  Estado actual: 2
+  Pila estados: [0, 2]
+  Accin LR[2][23]: -2
+[LR][REDUCE] Candidatos vlidos: [(1, 0, 2, 0, -3, 1), (0, 1, 0, 1, -1, 2)]
+[LR][REDUCE] Regla elegida: R1 - programa con longitud 1
+    REDUCE: Regla 0 (programa) - Longitud 1
+[LR] R1: programa -> Definiciones (Regla de aceptacin)
+[LR] AST raz creado: programa con 1 hijos
+AST construido exitosamente con raz: programa
+
+=== ANLISIS SEMNTICO ===
+\n========== ANLISIS SEMNTICO ==========\n
+[SEMANTIC] Analizando programa principal
+[SEMANTIC] Definido: Function(suma(a:int, b:int) -> int) en scope 'global'
+[SEMANTIC] Definido: Function(main() -> int) en scope 'global'
+[SEMANTIC] Entrando a scope: function_suma
+[SEMANTIC] Definido: Parameter(a:int [init]) en scope 'function_suma'
+[SEMANTIC] Definido: Parameter(b:int [init]) en scope 'function_suma'
+[SEMANTIC] Saliendo de scope: function_suma
+[SEMANTIC] Entrando a scope: function_main
+[SEMANTIC] Definido: Variable(a:int [uninit]) en scope 'function_main'
+[SEMANTIC] Definido: Variable(b:int [uninit]) en scope 'function_main'
+[SEMANTIC] Definido: Variable(c:int [uninit]) en scope 'function_main'
+[SEMANTIC] Saliendo de scope: function_main
+\n========== TABLA DE SMBOLOS ==========\n
+Scope: global
+  Function(suma(a:int, b:int) -> int) [USED]
+  Function(main() -> int)
+\n========================================
+\n========== RESULTADOS ANLISIS SEMNTICO ==========\n
+Anlisis semntico completado sin errores ni advertencias
+ESTADSTICAS:
+  - Funciones declaradas: 2
+  - Variables declaradas: 0
+  - Errores semnticos: 0
+  - Advertencias: 0
+\n==================================================
+
+=== GENERACIN DE ARCHIVOS ===
+AST DOT guardado en: ast.dot
+AST PNG generado en: ast.png
+
+=== GENERACIN DE CDIGO ASM ===
+Cdigo ensamblador generado en: output.s
+Primeras lneas del cdigo ASM:
+      msg db 'Resultado: ', 0
+      newline db 10, 0  ; \n para Linux
+      buffer times 32 db 0
+  section .data
+  
+  section .text
+  global _start
+  
+  
+  suma:
+      push rbp
+      mov rbp, rsp
+      sub rsp, 48
+      mov [rbp-8], rdi
+      mov [rbp-16], rsi
+  ... (98 lneas ms)
+
+=== RESUMEN FINAL ===
+Anlisis lxico: Completado
+Anlisis sintctico: Completado
+Anlisis semntico: 0 errores, 0 advertencias
+
+X Error inesperado: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
